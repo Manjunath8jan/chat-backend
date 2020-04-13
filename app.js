@@ -73,6 +73,9 @@ server.on('listening', onListening);
 
 // end server listening code
 
+const socketLib = require('./app/libs/socketLib');
+const socketServer = socketLib.setServer(server);
+
 /**
  * Event listener for HTTP server "error" event.
  */
