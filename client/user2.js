@@ -1,14 +1,15 @@
 const socket = io('http://localhost:3000');
 
 const authToken = "OWRlNTllYTUxMzNlNjM2NDcyZTFjMTEwNWU3N2Q2ZjRhOGYzYjZmYjc3YzIxODgxNGIwZjNiYzgyOTJhNzFmNTRjNjMxYjZkZjczMjdiZDViY2IxMzg5MzQ0OGJiN2MyYWZjMTM2ODA2OTBiMjBmOTE4NzgyY2JkNTJlNWU0MWM2ZA=="
-const userId = "H1pOQGY9M"
+const userId = "SJ-iectqM"
 
 let chatMessage = {
     createdOn: Date.now(),
-    receiverId: 'SJ-iectqM',
-    senderId: userId,
-    senderName: 'Mr sender'
-} 
+    receiverId: 'H1pOQGY9M',
+    receiverName: userId,
+    senderName: "Guruguntla" 
+}
+
 let chatSocket = () => {
     socket.on('verifyUser', (data) => {
         console.log("socket trying to verify user");
@@ -16,17 +17,8 @@ let chatSocket = () => {
     });
 
     socket.on(userId, (data) => {
-        console.log("you received a message"+data.senderName)
+        console.log("you received a message from "+data.senderName);
         console.log(data.message)
-    });
-
-    socket.on("online-user-list",(data) => {
-        console.log("online user list is updated. some user sould be onlie or offline")
-        console.log(data)
-    });
-
-    socket.on("typying", (data) => {
-        console.log(data+" is typing")
     });
 
     $("#send").on('click', function() {
@@ -36,11 +28,12 @@ let chatSocket = () => {
     })
 
     $("#messageToSend").on('keypress', function(){
-        socket.emit("typing", "mr Xyz")
+        socket.emit("typing","Aditya kumar")
     })
+
+    socket.on("typing", (data) => {
+        console.log(data +" is typing")
+    });
 }
-
-
-
 
 chatSocket();
