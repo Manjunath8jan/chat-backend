@@ -1,13 +1,14 @@
 const socket = io('http://localhost:3000');
 
-const authToken = "OWRlNTllYTUxMzNlNjM2NDcyZTFjMTEwNWU3N2Q2ZjRhOGYzYjZmYjc3YzIxODgxNGIwZjNiYzgyOTJhNzFmNTRjNjMxYjZkZjczMjdiZDViY2IxMzg5MzQ0OGJiN2MyYWZjMTM2ODA2OTBiMjBmOTE4NzgyY2JkNTJlNWU0MWM2ZA=="
-const userId = "SJ-iectqM"
+const authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqd3RpZCI6IjRZcjN1eW5hViIsImlhdCI6MTU4NzE1MDU2NjU5MywiZXhwIjoxNTg3MjM2OTY2LCJzdWIiOiJhdXRoVG9rZW4iLCJpc3MiOiJlZENoYXQiLCJkYXRhIjp7InVzZXJJZCI6IlhrTUNmLWQtMyIsImZpcnN0TmFtZSI6InNoaXZhamkiLCJsYXN0TmFtZSI6IkJoYXNoYSIsImVtYWlsIjoiaGVsbG9Ac2hpdmFqaS5jb20iLCJtb2JpbGVOdW1iZXIiOjE0MzI1NjExNDN9fQ.cwuyx7otjG4EcgmzoVFK-yFX-s5YQ_CFdHGoW-PM7MU"
+const userId = "XkMCf-d-3"
 
 let chatMessage = {
     createdOn: Date.now(),
-    receiverId: 'H1pOQGY9M',
+    receiverId: 'G44ugxm8J',
     receiverName: userId,
-    senderName: "Guruguntla" 
+    senderId: userId,
+    senderName: "shivaji bhasha" 
 }
 
 let chatSocket = () => {
