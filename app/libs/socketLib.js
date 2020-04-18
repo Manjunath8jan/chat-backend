@@ -4,6 +4,7 @@ const shortid = require('shortid');
 const logger = require('./loggerLib.js');
 const events = require('events');
 const eventEmitter = new events.EventEmitter();
+const redisLib = require('./redisLib.js');
 
 const tokenLib = require('./tokenLib.js');
 const check = require('./checkLib.js');
@@ -29,19 +30,28 @@ let setServer = (server) => {
                     let currentUser = user.data;
 
                     socket.userId = currentUser.userId
-                    let fullName = `${currentUser.firstname} ${currentUser.lastName}`
-                    console.log(`${fullName} is online`);
-                    socket.emit(currentUser.userId, "you are online")
+                    let fullName = `${currentUser.firstName} ${currentUser.lastName}`
+                    let key = currentUser.userId
+                    let value = fullName
 
-                    let userObj = {userId:currentUser.userId, fullName:fullName}
-                    allOnlineUsers.push(userObj)
-                    console.log(allOnlineUsers)
+                    let setUserOnline = redisLib.setANewOnlineUserInHash('OnlineUsers', key, value, (err, result) => {
+                        if(err){
+                            console.log('some error occured')
+                        } else {
+                            redisLib.getAllUsersInAhash('OnlineUsers', (err, result) => {
+                                console.log('--- inside getAllUsersInHash function ---')
+                                if(err){
+                                    console.log(err);
+                                }else{
+                                    console.log(`${fullName} is onlline`);
+                                    socket.room = 'newchatroom'
 
-                    // room name
-                    socket.room = 'newChatRoom'
-                    //join room
-                    socket.join(socket.room)
-                    socket.to(socket.room).broadcast.emit('online-user-list', allOnlineUsers);
+                                    socket.join(socket.room)
+                                    socket.to(socket.room).broadcast.emit('online-user-list', result);
+                                }
+                            })
+                        }
+                    })
 
                 }
             })
@@ -50,12 +60,24 @@ let setServer = (server) => {
         socket.on('disconnect', ()=> {
             console.log("user is disconnected");
             console.log(socket.userId);
-            var removeIndex = allOnlineUsers.map(function(user){return user.userId;}).indexOf(socket.userId);
-            allOnlineUsers.splice(removeIndex, 1)
-            console.log(allOnlineUsers)
+            // var removeIndex = allOnlineUsers.map(function(user){return user.userId;}).indexOf(socket.userId);
+            // allOnlineUsers.splice(removeIndex, 1)
+            // console.log(allOnlineUsers)
 
-            socket.to(socket.room).broadcast.emit('online-user-list', allOnlineUsers);
-            socket.leave(socket.room)
+            // socket.to(socket.room).broadcast.emit('online-user-list', allOnlineUsers);
+            // socket.leave(socket.room)
+
+            if(socket.userId){
+                redisLib.deleteUserFromHash('Onlineusers', socket.userId)
+                redisLib.getAllUsersInAhash('OnlineUsers', (err, result) => {
+                    if(err){
+                        console.log(err)
+                    } else {
+                        socket.leave(socket.room)
+                        socket.to(socket.room).broadcast.emit('online-user-list', result)
+                    }
+                })
+            }
         })
 
         socket.on('chat-msg', (data) => {
