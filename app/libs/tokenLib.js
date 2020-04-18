@@ -25,27 +25,32 @@ let generateToken = (data, cb) => {
   }
 }// end generate token 
 
-let verifyClaim = (token,secretKey,cb) => {
+let verifyClaim = (token, secretKey, cb) => {
   // verify a token symmetric
   jwt.verify(token, secretKey, function (err, decoded) {
-    if(err){
+    if (err) {
       console.log("error while verify token");
       console.log(err);
-      cb(err,null)
+      cb(err, null);
     }
-    else{
+    else {
       console.log("user verified");
-      console.log(decoded);
-      cb(null,decoded);
-    }  
- 
- 
+      // console.log(decoded);
+      cb(null, decoded);
+    }
+
+
   });
 
 
-}// end verify claim 
+}
+
+
+
 
 let verifyClaimWithoutSecret = (token, cb) => {
+
+  /* below commented code needed and commected to verify for working */
 
   jwt.verify(token, secretKey, function( err, decoded){
     if(err){
@@ -59,7 +64,7 @@ let verifyClaimWithoutSecret = (token, cb) => {
     }
   })
 
-
+console.log("user verified")
 }
 
 
